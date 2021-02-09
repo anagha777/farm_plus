@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
           selectedItemColor: Colors.white70,
           onTap: onTabTapped,
           iconSize: 24.0,
-          backgroundColor: Colors.grey[900].withOpacity(.7),
+          backgroundColor: Colors.grey[900].withOpacity(.6),
           type: BottomNavigationBarType.fixed,
           unselectedItemColor: Colors.grey.withOpacity(.4),
           items: <BottomNavigationBarItem>[

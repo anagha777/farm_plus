@@ -1,117 +1,441 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Farm+',
+      theme: new ThemeData(scaffoldBackgroundColor: const Color(0xFF33691E)),
+      debugShowCheckedModeBanner: false,
+      home: RegisterPage(title: 'Farm+'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+  // MyHomePage({Key key, this.title}) : super(key: key);
+  // final String title;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _pageIndex = 0;
+  PageController _pageController;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  List<Widget> tabPages = [
+    Screen1(),
+    Screen2(),
+    Screen3(),
+    Screen4(),
+    Screen5(),
+  ];
+  final GlobalKey scaffoldKey = GlobalKey();
+  final SnackBar snackBar = const SnackBar(content: Text('Showing Snackbar'));
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _pageIndex);
   }
 
   @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Container(
+      child: Scaffold(
+        key: scaffoldKey,
+        appBar: AppBar( automaticallyImplyLeading: false,
+          title: SearchBox(),
+          actions: [
+            // IconButton(
+            //   icon: const Icon(Icons.search),
+            //   tooltip: 'Search',color: Colors.grey[400],
+            //   onPressed: () {
+            //     // scaffoldKey.currentState.showSnackBar(snackBar);
+            //   },
+            // ),
+            IconButton(
+              icon: const Icon(Icons.more_vert),
+              tooltip: 'Next page',
+              onPressed: () {
+                // openPage(context);
+              },
             ),
           ],
+          backgroundColor: Colors.grey[900].withOpacity(.6),
+          elevation: 0.0,
         ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _pageIndex,
+          selectedItemColor: Colors.white70,
+          onTap: onTabTapped,
+          iconSize: 24.0,
+          backgroundColor: Colors.grey[900].withOpacity(.7),
+          type: BottomNavigationBarType.fixed,
+          unselectedItemColor: Colors.grey.withOpacity(.4),
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home), title: Text("Home")),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.location_on), title: Text("Sell")),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_basket), title: Text("Buy")),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.message), title: Text("Message")),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.account_box), title: Text("Me")),
+            // Image.asset('assets/images/messageblack.png'),
+            // title: Text("Message")),
+          ],
+        ),
+        body: PageView(
+          children: tabPages,
+          onPageChanged: onPageChanged,
+          controller: _pageController,
+        ),
+        backgroundColor: Colors.green[900].withOpacity(.8),
+      ));
+  void onPageChanged(int page) {
+    setState(() {
+      this._pageIndex = page;
+    });
+  }
+
+  void onTabTapped(int index) {
+    this._pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+  }
+}
+
+class SearchBox extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Farm',
+          style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Source Sans Pro',
+              color: Colors.white),
+        ),
+        Text(
+          ' +',
+          style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Source Sans Pro',
+              color: Colors.red),
+        ),
+        Container(
+          color: Colors.transparent,
+          margin: EdgeInsets.only(left: 20, right: 0, top: 0, bottom: 0),
+          width: 208,
+          height: 30,
+          child: TextField(
+            style: TextStyle(
+              color: Colors.white,
+            ),
+            decoration: InputDecoration(
+              suffixIcon: Icon(Icons.search),
+              enabledBorder: new OutlineInputBorder(
+                  borderSide: new BorderSide(
+                    color: Colors.white54,
+                  )),
+              contentPadding:
+              EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+              hintText: 'Search here',
+              hintStyle: TextStyle(
+                color: Colors.white10,
+              ),
+            ),
+          ),
+        )
+      ],
+      key: key,
+      mainAxisAlignment: MainAxisAlignment.start,
+    );
+  }
+}
+
+class RegisterPage extends StatelessWidget {
+  RegisterPage({Key key, this.title}) : super(key: key);
+  TextStyle style =
+  TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
+  final String title;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black.withAlpha(150),
+      child: Scaffold(
+          backgroundColor: Colors.green[900].withOpacity(.15),
+          appBar: AppBar(
+            toolbarHeight: 100, automaticallyImplyLeading: false,
+            title: Container(
+                width: 80,
+                height: 80,
+                child: Image.asset('assets/images/icon.png')),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+          ),
+          body: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 100),
+              child: Container(
+                  child: Column(children: <Widget>[
+                    Center(
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(children: <TextSpan>[
+                          TextSpan(
+                              text: "Farm ",
+                              style: TextStyle(
+                                  fontSize: 50,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                          TextSpan(
+                              text: "+",
+                              style: TextStyle(
+                                  fontSize: 40,
+                                  color: Colors.red[900],
+                                  fontWeight: FontWeight.bold)),
+                        ]),
+                      ),
+                    ),
+                    Card(color: Colors.green[600].withOpacity(.3),margin: EdgeInsets.all(10.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(height: 50.0),
+                            TextField(
+                              obscureText: true,
+                              style: style,
+                              decoration: InputDecoration(
+                                  contentPadding:
+                                  EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                  hintText: "USER NAME",hintStyle: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0))),
+                            ),
+                            SizedBox(height: 25.0),
+                            TextField(
+                              obscureText: true,
+                              style: style,
+                              decoration: InputDecoration(
+                                  contentPadding:
+                                  EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                  hintText: "PASSWORD",hintStyle: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0))),
+                            ),
+                            SizedBox(
+                              height: 50.0,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: <Widget>[
+                            Center(child:  Column(
+                              children: [
+                                GestureDetector(onTap:() {
+                                  Navigator.push( context,MaterialPageRoute(builder: (context) => LoginPage()),);},
+                                  child:Image(image:AssetImage('assets/images/thump.png'),height: 90,),
+                                )],
+                            )),
+                            SizedBox(
+                              height: 1.0,
+                            ),
+                            Center(child: Text('Register',style: TextStyle(fontSize: 18,color: Colors.white70,fontStyle: FontStyle.italic),),),//,fit: BoxFit.cover,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ])))),
+    );
+  }
+}
+
+class LoginPage extends StatelessWidget {
+  LoginPage({Key key, this.title}) : super(key: key);
+  TextStyle style =
+  TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
+  final String title;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black.withAlpha(150),
+      child: Scaffold(
+          backgroundColor: Colors.green.withAlpha(10).withOpacity(.1),
+          body: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 100),
+              child: Container(
+                  child: Column(children: <Widget>[
+                    SizedBox(height: 80,),
+                    Center(
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(children: <TextSpan>[
+                          TextSpan(
+                              text: "Farm ",
+                              style: TextStyle(
+                                  fontSize: 50,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                          TextSpan(
+                              text: "+",
+                              style: TextStyle(
+                                  fontSize: 40,
+                                  color: Colors.red[900],
+                                  fontWeight: FontWeight.bold)),
+                        ]),
+                      ),
+                    ),
+                    Container(color: Colors.transparent,margin: EdgeInsets.all(65.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(height: 30.0),
+                            Card(color: Colors.white12.withOpacity(.3),
+                              child: TextField(
+                                obscureText: true,
+                                style: style,
+                                decoration: InputDecoration(
+                                  contentPadding:
+                                  EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                                  hintText: "username@mail.com",hintStyle: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 5.0),
+                            Card(color: Colors.white12.withOpacity(.3),
+                              child: TextField(
+                                obscureText: true,
+                                style: style,
+                                decoration: InputDecoration(
+                                  contentPadding:
+                                  EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                                  hintText: "********",hintStyle: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 50.0,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: <Widget>[
+                            Center(child:  Column(
+                              children: [
+                                GestureDetector(onTap:() {
+                                  Navigator.push( context,MaterialPageRoute(builder: (context) => MyHomePage()),);},
+                                  child:Text(''
+                                      'Login',style: TextStyle(fontSize: 18,color: Colors.white70,fontStyle: FontStyle.italic),),),
+                              ],
+                            )),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ])))),
+    );
+  }
+}
+
+class Screen1 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[900].withOpacity(.6),
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Card(
+            color: Colors.teal.withOpacity(.3),
+            child: Center(child: Text("Screen 1"))),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class Screen2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[900].withOpacity(.6),
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Card(
+            color: Colors.teal.withOpacity(.3),
+            child: Center(child: Text("Screen 2"))),
+      ),
+    );
+  }
+}
+
+class Screen3 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[900].withOpacity(.6),
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Card(
+            color: Colors.teal.withOpacity(.3),
+            child: Center(child: Text("Screen 3"))),
+      ),
+    );
+  }
+}
+
+class Screen4 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[900].withOpacity(.6),
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Card(
+            color: Colors.teal.withOpacity(.3),
+            child: Center(child: Text("Screen 4"))),
+      ),
+    );
+  }
+}
+
+class Screen5 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[900].withOpacity(.6),
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Card(
+            color: Colors.teal.withOpacity(.3),
+            child: Center(child: Text("Screen 5"))),
+      ),
     );
   }
 }

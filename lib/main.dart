@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Farm+',
       theme: new ThemeData(scaffoldBackgroundColor: const Color(0xFF33691E)),
       debugShowCheckedModeBanner: false,
-      home: RegisterPage(title: 'Farm+'),
+      home: Loginpage(title: 'Farm+'),
     );
   }
 }
@@ -24,6 +25,13 @@ class MyHomePage extends StatefulWidget {
   // final String title;
   @override
   _MyHomePageState createState() => _MyHomePageState();
+}
+
+class Loginpage extends StatefulWidget {
+  Loginpage({Key key, this.title}) : super(key: key);
+  final String title;
+  @override
+  _Loginpage createState() => _Loginpage();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -297,7 +305,7 @@ class RegisterPage extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginPage()),
+                                      builder: (context) => Loginpage()),
                                 );
                               },
                               child: Image(
@@ -328,11 +336,24 @@ class RegisterPage extends StatelessWidget {
   }
 }
 
-class LoginPage extends StatelessWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
+class _Loginpage extends  State<Loginpage> {
+  String _code;
+  String signature = "{{ app signature }}";
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    SmsAutoFill().unregisterListener();
+    super.dispose();
+  }
+  // _Loginpage({Key key, this.title}) : super(key: key);
   TextStyle style =
       TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
-  final String title;
+  // final String title;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -367,66 +388,84 @@ class LoginPage extends StatelessWidget {
                 ),
                 SizedBox(height: 80,),
                 Container(
-                  color: Colors.transparent,
+                  // color: Colors.transparent,
                   margin: EdgeInsets.all(30.0),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children:<Widget>[
-                          Container(
-                            decoration:BoxDecoration(
-                                borderRadius:BorderRadius.circular(10),
-                            ),
-                            child: Image.asset('assets/images/key2.png'),width: 50,height: 100,
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        PhoneFieldHint(),
+                        PinFieldAutoFill(
+                          decoration: UnderlineDecoration(
+                            textStyle: TextStyle(fontSize: 20, color: Colors.black),
+                            colorBuilder: FixedColorBuilder(Colors.black.withOpacity(0.3)),
                           ),
-                          Column(
-                            mainAxisAlignment:MainAxisAlignment.center ,
-                            children: <Widget>[
-                              Container(
-                                height: 50,
-                                width: 180,
-                                child:Card(color: Colors.white12.withOpacity(.3),
-                                  child: TextField(
-                                    obscureText: true,
-                                    style: style,
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                      EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 10.0),
-                                      hintText: "username@mail.com",
-                                      hintStyle: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: 180.0,
-                                height: 50,
-                                child: Card(
-                                  color: Colors.white12.withOpacity(.3),
-                                  child: TextField(
-                                    obscureText: true,
-                                    style: style,
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                      EdgeInsets.fromLTRB(10.0, 0, 0.0, 10.0),
-                                      hintText: "********",
-                                      hintStyle: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ]
+                          currentCode: _code,
+                          onCodeSubmitted: (code) {},
+                        ),
+
+                      ],
                     ),
+
+                    // child: Row(
+                    //     mainAxisSize: MainAxisSize.min,
+                    //     // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    //     children:<Widget>[
+                    //       Container(
+                    //         decoration:BoxDecoration(
+                    //             borderRadius:BorderRadius.circular(10),
+                    //         ),
+                    //         child: Image.asset('assets/images/key2.png'),width: 50,height: 100,
+                    //       ),
+                    //       Column(
+                    //         mainAxisAlignment:MainAxisAlignment.center ,
+                    //         children: <Widget>[
+                    //           Container(
+                    //             height: 50,
+                    //             width: 180,
+                    //             child:Card(color: Colors.white12.withOpacity(.3),
+                    //               child: TextField(
+                    //                 obscureText: true,
+                    //                 style: style,
+                    //                 decoration: InputDecoration(
+                    //                   contentPadding:
+                    //                   EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 10.0),
+                    //                   hintText: "username@mail.com",
+                    //                   hintStyle: TextStyle(
+                    //                       color: Colors.white,
+                    //                       fontSize: 16,
+                    //                       fontWeight: FontWeight.bold),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Container(
+                    //             width: 180.0,
+                    //             height: 50,
+                    //             child: Card(
+                    //               color: Colors.white12.withOpacity(.3),
+                    //               child: TextField(
+                    //                 obscureText: true,
+                    //                 style: style,
+                    //                 decoration: InputDecoration(
+                    //                   contentPadding:
+                    //                   EdgeInsets.fromLTRB(10.0, 0, 0.0, 10.0),
+                    //                   hintText: "********",
+                    //                   hintStyle: TextStyle(
+                    //                       color: Colors.white,
+                    //                       fontSize: 16,
+                    //                       fontWeight: FontWeight.bold),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ]
+                    // ),
                   ),
                 ),
                 Container(

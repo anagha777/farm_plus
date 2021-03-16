@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "835996653546",
+    "project_id": "farmplus-fd125",
+    "storage_bucket": "farmplus-fd125.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835996653546:android:58b475374fecbbb27d0493",
+        "android_client_info": {
+          "package_name": "com.example.farm_plus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835996653546-kbaueipc0piu6v47k97d9bmmujba997n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE5tfSL0sKWl1VUhVo0utinTORUKZxU_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835996653546-kbaueipc0piu6v47k97d9bmmujba997n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

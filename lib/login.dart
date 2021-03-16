@@ -1,28 +1,13 @@
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 
 import 'home.dart';
-import 'main.dart';
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Farm+',
-      theme: new ThemeData(scaffoldBackgroundColor: const Color(0xFF33691E)),
-      debugShowCheckedModeBanner: false,
-      home: Loginpage(title: 'Farm+'),
-    );
-  }
-}
-
-
 
 class Loginpage extends StatefulWidget {
   Loginpage({Key key, this.title}) : super(key: key);
@@ -46,6 +31,9 @@ class _Loginpage extends  State<Loginpage> {
   }
   // _Loginpage({Key key, this.title}) : super(key: key);
   final myController = TextEditingController();
+  final otpController = TextEditingController();
+  final SmsAutoFill _autoFill = SmsAutoFill();
+  String phoneNumber;
   TextStyle style =
   TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
   // final String title;
@@ -96,13 +84,14 @@ class _Loginpage extends  State<Loginpage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(color:Colors.white12,height:45,
                                   child: PhoneFieldHint(controller: myController,)),
+
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8),
                               child: Container(color: Colors.white12,height: 45,
                                 child: Padding(
                                   padding: const EdgeInsets.all(4.0),
-                                  child: PinFieldAutoFill(
+                                  child: PinFieldAutoFill(controller: otpController,
                                     decoration: UnderlineDecoration(
                                       textStyle: TextStyle(fontSize: 20, color: Colors.black),
                                       colorBuilder: FixedColorBuilder(Colors.black.withOpacity(0.3)),
@@ -116,8 +105,6 @@ class _Loginpage extends  State<Loginpage> {
 
                           ],
                         ),
-
-
                       ),
                     ),
                     Container(
@@ -129,12 +116,19 @@ class _Loginpage extends  State<Loginpage> {
                                 child: Column(
                                   children: [
                                     GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => MyHomePage()),
-                                        );
+                                      onTap: () async {
+                                        String hint = await _autoFill.hint;
+                                        myController.value =
+                                            TextEditingValue(text: hint ?? '');
+                                        print(hint);
+                                        verifyPhoneNumber(hint
+                                            , isSignup: false);
+
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //       builder: (context) => MyHomePage()),
+                                        // );
                                       },
                                       child: Text(
                                         ''
@@ -153,5 +147,36 @@ class _Loginpage extends  State<Loginpage> {
                     ),
                   ])))),
     );
+  }
+  void verifyPhoneNumber(String phoneNumber,
+      {bool isSignup}) {
+    FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        timeout: Duration(seconds: 0),
+        verificationCompleted: (AuthCredential authCredential) {
+          print(authCredential);
+          FirebaseAuth.instance
+              .signInWithCredential(authCredential)
+              .then((value) async {
+            print(value);
+          });
+        },
+        verificationFailed: (FirebaseAuthException authException) {
+          print(authException.toString());
+        },
+        codeSent: (value, [data]) {
+          print(value);
+        },
+        codeAutoRetrievalTimeout: (value) {
+          print("code auto retrieval timeout  :  " + value);
+          Navigator.pushReplacement(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => RegisterPage(
+                      // phoneNumber: phoneNumber,
+                      // verificationId: value,
+                      // isSignup: isSignup
+                  )));
+        });
   }
 }

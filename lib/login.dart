@@ -168,7 +168,7 @@ class _Loginpage extends  State<Loginpage> {
       {bool isSignup}) {
     FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        timeout: Duration(seconds: 0),
+        timeout: Duration(seconds: 20),
         verificationCompleted: (AuthCredential authCredential) {
           print(authCredential);
           FirebaseAuth.instance

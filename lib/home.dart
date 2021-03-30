@@ -493,8 +493,8 @@ class SearchBox extends StatelessWidget {
 // }
 
 class Screen1 extends StatelessWidget {
-  List<String> imgUrls = ["https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.almanac.com%2Fplant%2Ftomatoes&psig=AOvVaw2BybaJDHgDzUhL7KwOjZSN&ust=1617170548473000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjhxrGs1-8CFQAAAAAdAAAAABAD"
-    "https://thumbor.forbes.com/thumbor/fit-in/416x416/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5ec595d45f39760007b05c07%2F0x0.jpg%3Fbackground%3D000000%26cropX1%3D989%26cropX2%3D2480%26cropY1%3D74%26cropY2%3D1564",
+  List<String> imgUrls = [
+"https://www.google.com/imgres?imgurl=https://cdn.britannica.com/s:900x675,c:crop/16/187216-131-FB186228/tomatoes-tomato-plant-Fruit-vegetable.jpg&imgrefurl=https://www.britannica.com/story/is-a-tomato-a-fruit-or-a-vegetable&tbnid=p-1mjSANqdFJvM&vet=1&docid=BEpXCF4LRKZI7M&w=897&h=674&hl=en-GB&source=sh/x/im",    "https://thumbor.forbes.com/thumbor/fit-in/416x416/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5ec595d45f39760007b05c07%2F0x0.jpg%3Fbackground%3D000000%26cropX1%3D989%26cropX2%3D2480%26cropY1%3D74%26cropY2%3D1564",
     "https://static.highsnobiety.com/thumbor/UNG6CQmGikuFcinm20w22aO-nBM=/1600x1067/static.highsnobiety.com/wp-content/uploads/2020/06/09101827/cristiano-ronaldo-1-billion-earnings-01.jpg",
     "https://i2-prod.football.london/incoming/article18887838.ece/ALTERNATES/s1200c/1_Mesut-Ozil.jpg",
 "https://www.google.com/imgres?imgurl=https%3A%2F%2Fimages.moneycontrol.com%2Fstatic-mcnews%2F2020%2F04%2Ftea-garden-30042020-770x433.jpg%3Fimpolicy%3Dwebsite%26width%3D770%26height%3D431&imgrefurl=https%3A%2F%2Fwww.moneycontrol.com%2Fnews%2Fbusiness%2Fcommodities%2Fcoronavirus-lockdown-buoys-indian-tea-prices-as-domestic-demand-increases-6055191.html&tbnid=HzNEeG_-pA6RuM&vet=12ahUKEwjc9cm5rNfvAhVS0XMBHfPqCCQQMygjegUIARC0Ag..i&docid=GhUrEvs-bKSnnM&w=770&h=431&q=tea&safe=active&ved=2ahUKEwjc9cm5rNfvAhVS0XMBHfPqCCQQMygjegUIARC0Ag"  ];
@@ -509,6 +509,7 @@ class Screen1 extends StatelessWidget {
       // ),
       body: ListView.builder(
           itemCount: imgUrls.length,
+
           itemBuilder: (context, index) {
 
             return Padding(

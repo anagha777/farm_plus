@@ -17,8 +17,6 @@ class Loginpage extends StatefulWidget {
 }
 class _Loginpage extends  State<Loginpage> {
   String _code;
-  String signature = "{{ app signature }}";
-
   @override
   void initState() {
     super.initState();
@@ -83,9 +81,27 @@ class _Loginpage extends  State<Loginpage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(color:Colors.white12,height:45,
-                                  child: PhoneFieldHint(controller: myController,)),
+                                  child: PhoneFieldHint(controller: myController, autofocus: true,
+                                  //       (value) {
+                                  //   if (value.length < 6) {
+                                  //     return "Enter 6 digit OTP";
+                                  //   } else if (_is_invalid_otp) {
+                                  //     return "OTP Entered is invalid, Please enter a valid OTP";
+                                  //   } else {
+                                  //     return null;
+                                  //   }
+                                  // },
+  )),
 
                             ),
+                        // setState(() {
+                        //   print(timer.tick);
+                        //   currentSeconds = timer.tick;
+                        //   if (timer.tick >= timerMaxSeconds) {
+                        //     _isResendVisible = true;
+                        //     timer.cancel();
+                        //   }
+                        // });
                             Padding(
                               padding: const EdgeInsets.all(8),
                               child: Container(color: Colors.white12,height: 45,
@@ -172,7 +188,7 @@ class _Loginpage extends  State<Loginpage> {
           Navigator.pushReplacement(
               context,
               CupertinoPageRoute(
-                  builder: (context) => RegisterPage(
+                  builder: (context) => Home(
                       // phoneNumber: phoneNumber,
                       // verificationId: value,
                       // isSignup: isSignup

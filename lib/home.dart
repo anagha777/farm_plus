@@ -1,14 +1,20 @@
+import 'dart:async';
+import 'dart:js';
 import 'dart:ui';
+import 'package:farm_plus/src/model/place.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 import 'package:load/load.dart';
 
 import 'chat_item_page.dart';
 import 'chat_model.dart';
+import 'map/map_block.dart';
 
 void main() {
   runApp(Home());
@@ -19,20 +25,13 @@ class Home extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-// class Loginpage extends StatefulWidget {
-//   Loginpage({Key key, this.title}) : super(key: key);
-//   final String title;
-//   @override
-//   _Loginpage createState() => _Loginpage();
-// }
-
 class _MyHomePageState extends State<Home> {
   int _pageIndex = 0;
   PageController _pageController;
 
   List<Widget> tabPages = [
     Screen1(),
-    Screen2(),
+    Map(),
     Screen3(),
     Screen4(),
     Screen5(),
@@ -59,19 +58,24 @@ class _MyHomePageState extends State<Home> {
           automaticallyImplyLeading: false,
           title: SearchBox(),
           actions: [
-            // IconButton(
-            //   iconSize: 20,
-            //   icon: const Icon(Icons.search),
-            //   tooltip: 'Search',color: Colors.grey[400],
-            //   onPressed: () {
-            //     // scaffoldKey.currentState.showSnackBar(snackBar);
-            //   },
-            // ),
+              Row(
+                children: [
+                  Container(width: 15,height: 40,
+                    child: IconButton(
+                      icon: const Icon(Icons.search),
+                      tooltip: 'Search',color: Colors.grey[400],
+                      onPressed: () {
+                        // scaffoldKey.currentState.showSnackBar(snackBar);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
             IconButton(
               icon: const Icon(Icons.more_vert),
               tooltip: 'Settings',color: Colors.grey[400],
               onPressed: () {
-                // openPage(context);
               },
             ),
           ],
@@ -150,46 +154,47 @@ class SearchBox extends StatelessWidget {
         Text(
           'Farm',
           style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'Source Sans Pro',
-              color: Colors.white),
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              // fontFamily: 'Source Sans Pro',
+              color: Colors.white70),
         ),
         Text(
           ' +',
           style: TextStyle(
-              fontSize: 18,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
               fontFamily: 'Source Sans Pro',
               color: Colors.red),
         ),
         Container(
-          color: Colors.transparent,
+          color: Colors.white24,
           margin: EdgeInsets.only(left: 20, right: 0, top: 0, bottom: 0),
-          width: 208,
+          width: 170,
           height: 30,
           child: TextField(
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.white70,
             ),
-            decoration: InputDecoration(
-              suffixIcon: Icon(Icons.search),
-              enabledBorder: new OutlineInputBorder(
-                  borderSide: new BorderSide(
-                color: Colors.white54,
-              )),
-              contentPadding:
-                  EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-              hintText: 'Search here',
-              hintStyle: TextStyle(
-                color: Colors.white10,
-              ),
-            ),
+            // decoration: InputDecoration(
+            //   // suffixIcon: Icon(Icons.search),
+            //   enabledBorder: new OutlineInputBorder(
+            //       borderSide: new BorderSide(
+            //     color: Colors.white10,
+            //   )
+            //   ),
+            //   contentPadding:
+            //       EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+            //   hintText: 'Search here',
+            //   hintStyle: TextStyle(
+            //     color: Colors.white10,
+            //   ),
+            // ),
           ),
         )
       ],
       key: key,
-      mainAxisAlignment: MainAxisAlignment.start,
+      // mainAxisAlignment: MainAxisAlignment.start,
     );
   }
 }
@@ -493,11 +498,8 @@ class SearchBox extends StatelessWidget {
 // }
 
 class Screen1 extends StatelessWidget {
-  List<String> imgUrls = [
-"https://www.google.com/imgres?imgurl=https://cdn.britannica.com/s:900x675,c:crop/16/187216-131-FB186228/tomatoes-tomato-plant-Fruit-vegetable.jpg&imgrefurl=https://www.britannica.com/story/is-a-tomato-a-fruit-or-a-vegetable&tbnid=p-1mjSANqdFJvM&vet=1&docid=BEpXCF4LRKZI7M&w=897&h=674&hl=en-GB&source=sh/x/im",    "https://thumbor.forbes.com/thumbor/fit-in/416x416/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5ec595d45f39760007b05c07%2F0x0.jpg%3Fbackground%3D000000%26cropX1%3D989%26cropX2%3D2480%26cropY1%3D74%26cropY2%3D1564",
-    "https://static.highsnobiety.com/thumbor/UNG6CQmGikuFcinm20w22aO-nBM=/1600x1067/static.highsnobiety.com/wp-content/uploads/2020/06/09101827/cristiano-ronaldo-1-billion-earnings-01.jpg",
-    "https://i2-prod.football.london/incoming/article18887838.ece/ALTERNATES/s1200c/1_Mesut-Ozil.jpg",
-"https://www.google.com/imgres?imgurl=https%3A%2F%2Fimages.moneycontrol.com%2Fstatic-mcnews%2F2020%2F04%2Ftea-garden-30042020-770x433.jpg%3Fimpolicy%3Dwebsite%26width%3D770%26height%3D431&imgrefurl=https%3A%2F%2Fwww.moneycontrol.com%2Fnews%2Fbusiness%2Fcommodities%2Fcoronavirus-lockdown-buoys-indian-tea-prices-as-domestic-demand-increases-6055191.html&tbnid=HzNEeG_-pA6RuM&vet=12ahUKEwjc9cm5rNfvAhVS0XMBHfPqCCQQMygjegUIARC0Ag..i&docid=GhUrEvs-bKSnnM&w=770&h=431&q=tea&safe=active&ved=2ahUKEwjc9cm5rNfvAhVS0XMBHfPqCCQQMygjegUIARC0Ag"  ];
+  List<String> images = ['assets/images/tomato.jpeg','assets/images/potato.jpg','assets/images/banana.jpeg','assets/images/tea.jpg'
+  ];
   List<String> playerNames = ["Tomato", "Potato", "Banana", "Tea"];
   @override
   Widget build(BuildContext context) {
@@ -508,7 +510,7 @@ class Screen1 extends StatelessWidget {
       //   // title: Text("Sample listView"),
       // ),
       body: ListView.builder(
-          itemCount: imgUrls.length,
+          itemCount: images.length,
 
           itemBuilder: (context, index) {
 
@@ -562,24 +564,6 @@ class Screen1 extends StatelessWidget {
                                                   height: 20,
                                                 ),
                                               ),
-                                              // Container(height: 1,color: Colors.grey,),
-                                              // SizedBox(height: 5,),
-                                              // Padding(
-                                              //   padding: const EdgeInsets.only(bottom:8.0),
-                                              //   child: Container(
-                                              //     child: Text("C........."),
-                                              //     height: 20,
-                                              //   ),
-                                              // ),
-                                              // Container(height: 1,color: Colors.grey,),
-                                              // SizedBox(height: 5,),
-                                              // Padding(
-                                              //   padding: const EdgeInsets.only(bottom:8.0),
-                                              //   child: Container(
-                                              //     child: Text("D.........."),
-                                              //     height: 20,
-                                              //   ),
-                                              // ),
                                               Container(height: 1,color: Colors.grey,),
 
                                             ],
@@ -593,19 +577,19 @@ class Screen1 extends StatelessWidget {
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.grey, width: 1)),
-                        height: 200,
-                        width: 400,
-                        child: Image.network(
-                          imgUrls[index],
+
+                           Image.asset(images[index],
                           width: 300,
                           height: 200,
                           fit: BoxFit.cover,
                         ),
-                      ),
+                      //   child: Image.network(
+                      //     imgUrls[index],
+                      //     width: 300,
+                      //     height: 200,
+                      //     fit: BoxFit.cover,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -616,19 +600,192 @@ class Screen1 extends StatelessWidget {
   }
 }
 
-class Screen2 extends StatelessWidget {
+class Map extends StatefulWidget {
+  Map({Key key}) : super(key: key);
+
+  @override
+  Screen2 createState() => Screen2();
+}
+
+class Screen2 extends State<Map> {
+  Completer<GoogleMapController> _mapController = Completer();
+  StreamSubscription locationSubscription;
+  StreamSubscription boundsSubscription;
+  final _locationController = TextEditingController();
+
+  @override
+  void initState() {
+    // final applicationBloc = Provider.of<ApplicationBloc>( context, listen: false);
+
+
+    //Listen for selected Location
+    // locationSubscription = applicationBloc.selectedLocation.stream.listen((place) {
+    //   if (place != null) {
+    //     _locationController.text = place.name;
+    //     _goToPlace(place);
+    //   } else
+    //     _locationController.text = "";
+    // });
+    //
+    // applicationBloc.bounds.stream.listen((bounds) async {
+    //   final GoogleMapController controller = await _mapController.future;
+    //   controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+    // });
+    super.initState();
+  }
+
+
+
+  @override
+  void dispose() {
+    // final applicationBloc =
+    // Provider.of<ApplicationBloc>(context, listen: false);
+    // applicationBloc.dispose();
+    _locationController.dispose();
+    locationSubscription.cancel();
+    boundsSubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[900].withOpacity(.6),
-      child: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Card(
-            color: Colors.transparent, child: Center(child: Text("Screen 2"))),
+    final applicationBloc = Provider.of<ApplicationBloc>(context);
+    return Scaffold(
+        body: (applicationBloc.currentLocation == null)
+            ? Center(
+          child: CircularProgressIndicator(),
+        )
+            : ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _locationController,
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  hintText: 'Search by City',
+                  suffixIcon: Icon(Icons.search),
+                ),
+                onChanged: (value) => applicationBloc.searchPlaces(value),
+                onTap: () => applicationBloc.clearSelectedLocation(),
+              ),
+            ),
+            Stack(
+              children: [
+                Container(
+                  height: 500.0,
+                  child: GoogleMap(
+                    mapType: MapType.normal,
+                    myLocationEnabled: true,
+                    // initialCameraPosition: CameraPosition(
+                    //   target: LatLng(
+                    //       // applicationBloc.currentLocation.latitude,
+                    //       applicationBloc.currentLocation.longitude),
+                    //   zoom: 14,
+                    // ),
+                    onMapCreated: (GoogleMapController controller) {
+                      _mapController.complete(controller);
+                    },
+                    markers: Set<Marker>.of(applicationBloc.markers),
+                  ),
+                ),
+                if (applicationBloc.searchResults != null &&
+                    applicationBloc.searchResults.length != 0)
+                  Container(
+                      height: 300.0,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(.6),
+                          backgroundBlendMode: BlendMode.darken)),
+                if (applicationBloc.searchResults != null)
+                  Container(
+                    height: 300.0,
+                    child: ListView.builder(
+                        itemCount: applicationBloc.searchResults.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(
+                              applicationBloc
+                                  .searchResults[index].description,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onTap: () {
+                              applicationBloc.setSelectedLocation(
+                                  applicationBloc
+                                      .searchResults[index].placeId);
+                            },
+                          );
+                        }),
+                  ),
+              ],
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Find Nearest',
+                  style: TextStyle(
+                      fontSize: 25.0, fontWeight: FontWeight.bold)),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                spacing: 8.0,
+                children: [
+                  FilterChip(
+                    label: Text('25km'),
+                    onSelected: (val) => applicationBloc.togglePlaceType(
+                        'campground', val),
+                    selected:
+                    applicationBloc.placeType  =='campground',
+                    selectedColor: Colors.blue,
+                  ),
+                  FilterChip(
+                      label: Text('30km'),
+                      onSelected: (val) => applicationBloc
+                          .togglePlaceType('locksmith', val),
+                      selected: applicationBloc.placeType  =='locksmith',
+                      selectedColor: Colors.blue),
+                  FilterChip(
+                      label: Text('35km'),
+                      onSelected: (val) => applicationBloc
+                          .togglePlaceType('pharmacy', val),
+                      selected:
+                      applicationBloc.placeType  =='pharmacy',
+                      selectedColor: Colors.blue),
+
+                ],
+              ),
+            )
+          ],
+        ));
+  }
+
+  Future<void> _goToPlace(Place place) async {
+    final GoogleMapController controller = await _mapController.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: LatLng(
+                place.geometry.location.lat, place.geometry.location.lng),
+            zoom: 14.0),
       ),
     );
   }
 }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       color: Colors.grey[900].withOpacity(.6),
+//       child: Padding(
+//         padding: const EdgeInsets.all(40.0),
+//         child: Card(
+//             color: Colors.transparent, child: Center(child: Text("Screen 2"))),
+//       ),
+//     );
+//   }
+// }
 
 class Screen3 extends StatelessWidget {
   @override

@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 
@@ -15,7 +16,8 @@ class Loginpage extends StatefulWidget {
   @override
   _Loginpage createState() => _Loginpage();
 }
-class _Loginpage extends  State<Loginpage> {
+
+class _Loginpage extends State<Loginpage> {
   String _code;
   @override
   void initState() {
@@ -27,13 +29,15 @@ class _Loginpage extends  State<Loginpage> {
     SmsAutoFill().unregisterListener();
     super.dispose();
   }
+
   // _Loginpage({Key key, this.title}) : super(key: key);
   final myController = TextEditingController();
   final otpController = TextEditingController();
   final SmsAutoFill _autoFill = SmsAutoFill();
-  String phoneNumber;
+  String phoneNumber,verificationId;
+
   TextStyle style =
-  TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
+      TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
   // final String title;
   @override
   Widget build(BuildContext context) {
@@ -44,9 +48,10 @@ class _Loginpage extends  State<Loginpage> {
           body: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 100),
               child: Container(
+                  alignment: Alignment.center,
                   child: Column(children: <Widget>[
                     SizedBox(
-                      height: 80,
+                      height: 100,
                     ),
                     Center(
                       child: RichText(
@@ -67,115 +72,167 @@ class _Loginpage extends  State<Loginpage> {
                         ]),
                       ),
                     ),
-                    SizedBox(height: 50,),
+                    SizedBox(
+                      height: 70,
+                    ),
                     Container(
-                      // color: Colors.transparent,
-                      margin: EdgeInsets.all(30.0),
+                      // alignment: Alignment.center,
+                      color: Colors.transparent,
+                      margin: EdgeInsets.all(10.0),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
-                          // mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(color:Colors.white12,height:45,
-                                  child: PhoneFieldHint(controller: myController, autofocus: true,
-                                  //       (value) {
-                                  //   if (value.length < 6) {
-                                  //     return "Enter 6 digit OTP";
-                                  //   } else if (_is_invalid_otp) {
-                                  //     return "OTP Entered is invalid, Please enter a valid OTP";
-                                  //   } else {
-                                  //     return null;
-                                  //   }
-                                  // },
-  )),
-
-                            ),
-                        // setState(() {
-                        //   print(timer.tick);
-                        //   currentSeconds = timer.tick;
-                        //   if (timer.tick >= timerMaxSeconds) {
-                        //     _isResendVisible = true;
-                        //     timer.cancel();
-                        //   }
-                        // });
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Container(color: Colors.white12,height: 45,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: PinFieldAutoFill(controller: otpController,
-                                    decoration: UnderlineDecoration(
-                                      textStyle: TextStyle(fontSize: 20, color: Colors.black),
-                                      colorBuilder: FixedColorBuilder(Colors.black.withOpacity(0.3)),
-                                    ),
-                                    currentCode: _code,
-                                    onCodeSubmitted: (code) {},
+                          children: [
+                            Row(
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.only(right: 5,left: 10 ,top: 5),
+                                    child: Image.asset('assets/images/key1.png'),
+                                    width: 35,
+                                    height: 150,
                                   ),
-                                ),
-                              ),
-                            ),
-
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          children: <Widget>[
-                            Center(
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () async {
-                                        String hint = await _autoFill.hint;
-                                        myController.value =
-                                            TextEditingValue(text: hint ?? '');
-                                        print(hint);
-                                        verifyPhoneNumber(hint
-                                            , isSignup: false);
-
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //       builder: (context) => MyHomePage()),
-                                        // );
-                                      },
-                                      child: Text(
-                                        ''
-                                            'Login',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white70,
-                                            fontStyle: FontStyle.italic),
-                                      ),
+                                  Container(margin: EdgeInsets.only(right: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                  ],
-                                )),
+                                    child: Image.asset('assets/images/key2.png'),
+                                    width: 25,
+                                    height: 130,
+                                  ),
+                                  Container(
+                                    // height: 150,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                          width: 180.0,
+                                          height: 40,
+                                          child:Card(
+                                            color: Colors.white12.withOpacity(.3),
+                                            child: PhoneFieldHint(
+                                              controller: myController,
+                                              autofocus: true,
+                                            ),
+                                          ),
+                                        ),
+
+                                        Container(
+                                          width: 180.0,
+                                          height: 40,
+                                          child: Card(
+                                            color: Colors.white12.withOpacity(.3),
+                                            child: PinFieldAutoFill(
+                                              controller: otpController,
+                                              decoration: UnderlineDecoration(
+                                                textStyle: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black),
+                                                colorBuilder: FixedColorBuilder(
+                                                    Colors.black.withOpacity(0.3)),
+                                              ),
+                                              currentCode: _code,
+                                              onCodeSubmitted: (code) {
+                                                setState(() {
+                                                  this._code=code;
+                                                  print(_code);
+                                                  // _isLoadingButton = !_isLoadingButton;
+                                                  verifyOTP(code);
+                                                });
+                                              },
+                                              onCodeChanged: (code) {
+                                                if (code.length == 6) {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(FocusNode());
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ]),
+                            Row(
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.only(right: 5,left: 10 ,top: 5),
+                                    width: 35,
+                                    height: 50,
+                                  ),
+                                  Container(margin: EdgeInsets.only(right: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    width: 25,
+                                    height: 50,
+                                  ),
+                                  Container(margin: EdgeInsets.only(right: 10),
+                                    width: 85.0,
+                                    height: 30,
+                                    child: RaisedButton(
+                                        onPressed: () async {
+                                          // String hint = await _autoFill.hint;
+                                          // myController.value = TextEditingValue(text: hint ?? '');
+                                          // print(hint);
+                                          // verifyPhoneNumber(hint, isSignup: false);
+                                        },
+                                        child: Text(
+                                          'Cancel',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black,
+                                          ),),
+                                        color:Colors.white24
+                                    ),
+                                  ),
+                                  Container(margin: EdgeInsets.only(right: 10),
+                                    width: 85.0,
+                                    height: 30,
+                                    child: RaisedButton(
+                                        onPressed: () async {
+                                          String hint = await _autoFill.hint;
+                                          myController.value = TextEditingValue(text: hint ?? '');
+                                          print(hint);
+                                          verifyPhoneNumber(hint, isSignup: false);
+                                        },
+                                        child: Text(
+                                          'Send OTP',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black,
+                                          ),),
+                                        color:Colors.white24
+                                    ),
+                                  ),
+                                ]),
                           ],
                         ),
+
                       ),
                     ),
                   ])))),
     );
   }
-  void verifyPhoneNumber(String phoneNumber,
-      {bool isSignup}) {
+
+  void verifyPhoneNumber(String phoneNumber, {bool isSignup}) {
+    final PhoneCodeSent codeSent = (String verId, [int forceCodeResend]) {
+      this.verificationId = verId;
+      // print(verificationId);
+      // smsOTPDialog(context).then((value) {
+      //   print('sign in');
+      // });
+    };
     FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        timeout: Duration(seconds: 20),
+        timeout: Duration(seconds: 10),
         verificationCompleted: (AuthCredential authCredential) {
           print(authCredential);
-          FirebaseAuth.instance
-              .signInWithCredential(authCredential)
-              .then((value) async {
-            print(value);
-          });
+          verifyOTP(_code);
+          // FirebaseAuth.instance
+          //     .signInWithCredential(authCredential)
+          //     .then((value) async {
+          //       // Home();
+          //   print("verified");
+          // });
         },
         verificationFailed: (FirebaseAuthException authException) {
           print(authException.toString());
@@ -183,16 +240,41 @@ class _Loginpage extends  State<Loginpage> {
         codeSent: (value, [data]) {
           print(value);
         },
-        codeAutoRetrievalTimeout: (value) {
-          print("code auto retrieval timeout  :  " + value);
-          Navigator.pushReplacement(
-              context,
-              CupertinoPageRoute(
-                  builder: (context) => Home(
-                      // phoneNumber: phoneNumber,
-                      // verificationId: value,
-                      // isSignup: isSignup
-                  )));
+        codeAutoRetrievalTimeout: (value) async {
+          print("code auto retrieval timeout  :  ");
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('phonenumber', phoneNumber);
+          // print("covcvbcbvnbvnbbnvnb timeout  :  " +
+          //     prefs.getString('phoneNumber'));
+          verifyOTP(value);
+        //   Navigator.pushReplacement(
+        //       context,
+        //       CupertinoPageRoute(
+        //           builder: (context) => Home(
+        //               // phoneNumber: phoneNumber,
+        //               // verificationId: value,
+        //               // isSignup: isSignup
+        //               )));
         });
+  }
+
+  void verifyOTP(String code) {
+    print(code);
+    AuthCredential authCredential = PhoneAuthProvider.getCredential(
+        verificationId: code,
+        smsCode: otpController.text);
+    FirebaseAuth.instance
+        .signInWithCredential(authCredential)
+        .then((value) async {
+      print(value);
+      // if (widget.isSignup) {
+      Home();
+      // } else {
+      //   Navigator.pushReplacement(
+      //       context, CupertinoPageRoute(builder: (context) => Home()));
+      // }
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 }

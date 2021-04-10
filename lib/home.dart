@@ -1,40 +1,54 @@
 import 'dart:async';
-import 'dart:js';
+// import 'dart:js';
 import 'dart:ui';
+import 'package:farm_plus/Constants.dart';
+import 'package:farm_plus/login.dart';
 import 'package:farm_plus/src/model/place.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:sms_autofill/sms_autofill.dart';
-import 'package:pin_input_text_field/pin_input_text_field.dart';
-import 'package:load/load.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'DittoList.dart';
 import 'chat_item_page.dart';
 import 'chat_model.dart';
 import 'map/map_block.dart';
 
-void main() {
-  runApp(Home());
+Future<void> main() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String mobilenumber = prefs.getString('phonenumber');
+  runApp(Home(mobilenumber));
 }
 
 class Home extends StatefulWidget {
+  String mobilenumber = "0000000";
+  Home(String phonenumber) {
+    this.mobilenumber = phonenumber;
+    // print(mobilenumber);
+  }
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(mobilenumber);
 }
 
 class _MyHomePageState extends State<Home> {
   int _pageIndex = 0;
   PageController _pageController;
-
+  static String mobilenumber;
+  _MyHomePageState(String phonenumber) {
+    mobilenumber = phonenumber;
+    print(mobilenumber);
+  }
   List<Widget> tabPages = [
     Screen1(),
     Map(),
-    Screen3(),
+    DittoList(),
     Screen4(),
-    Screen5(),
+    Screen5()
   ];
   final GlobalKey scaffoldKey = GlobalKey();
   final SnackBar snackBar = const SnackBar(content: Text('Showing Snackbar'));
@@ -58,24 +72,35 @@ class _MyHomePageState extends State<Home> {
           automaticallyImplyLeading: false,
           title: SearchBox(),
           actions: [
-              Row(
-                children: [
-                  Container(width: 15,height: 40,
-                    child: IconButton(
-                      icon: const Icon(Icons.search),
-                      tooltip: 'Search',color: Colors.grey[400],
-                      onPressed: () {
-                        // scaffoldKey.currentState.showSnackBar(snackBar);
-                      },
-                    ),
+            Row(
+              children: [
+                Container(
+                  width: 15,
+                  height: 40,
+                  child: IconButton(
+                    icon: const Icon(Icons.search),
+                    tooltip: 'Search',
+                    color: Colors.grey[400],
+                    onPressed: () {
+                      Constants.choices;
+                      // scaffoldKey.currentState.showSnackBar(snackBar);
+                    },
                   ),
-                ],
-              ),
-
-            IconButton(
-              icon: const Icon(Icons.more_vert),
-              tooltip: 'Settings',color: Colors.grey[400],
-              onPressed: () {
+                ),
+              ],
+            ),
+            PopupMenuButton<String>(
+              onSelected: choiceAction,
+              color: Colors.green[200].withOpacity(.2),
+              itemBuilder: (BuildContext context) {
+                return Constants.choices.map((String choice) {
+                  return PopupMenuItem<String>(
+                      value: choice,
+                      child: Text(
+                        choice,
+                        style: TextStyle(color: Colors.white60),
+                      ));
+                }).toList();
               },
             ),
           ],
@@ -92,39 +117,44 @@ class _MyHomePageState extends State<Home> {
           unselectedItemColor: Colors.grey.withOpacity(.4),
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: ImageIcon(
-                  AssetImage("assets/images/home2.png"),
-                ),title: Text(""),
-                // title: Text("Home", style: TextStyle(fontSize: 11))
-  ),
+              icon: ImageIcon(
+                AssetImage("assets/images/home2.png"),
+              ),
+              title: Text(""),
+              // title: Text("Home", style: TextStyle(fontSize: 11))
+            ),
             BottomNavigationBarItem(
               icon: ImageIcon(
                 AssetImage("assets/images/location2.png"),
-              ),title: Text(""),
+              ),
+              title: Text(""),
               // title: Text('Sell', style: TextStyle(fontSize: 11)
               // ),
             ),
             BottomNavigationBarItem(
-                icon: ImageIcon(
-                  AssetImage("assets/images/sell2.png"),
-                  size: 28.0,
-                ),title: Text(""),
-                // title: Text("Buy", style: TextStyle(fontSize: 11))
+              icon: ImageIcon(
+                AssetImage("assets/images/sell2.png"),
+                size: 28.0,
+              ),
+              title: Text(""),
+              // title: Text("Buy", style: TextStyle(fontSize: 11))
             ),
             BottomNavigationBarItem(
-                icon: ImageIcon(
-                  AssetImage("assets/images/messag2.png"),
-                  size: 28.0,
-                ),title: Text(""),
+              icon: ImageIcon(
+                AssetImage("assets/images/messag2.png"),
+                size: 28.0,
+              ),
+              title: Text(""),
 
-                // title: Text("Message", style: TextStyle(fontSize: 11))
+              // title: Text("Message", style: TextStyle(fontSize: 11))
             ),
             BottomNavigationBarItem(
-                icon: ImageIcon(
-                  AssetImage("assets/images/account2.png"),
-                ),title: Text(""),
-                // title: Text("Me",style: TextStyle(fontSize: 11),)
-             ),
+              icon: ImageIcon(
+                AssetImage("assets/images/account2.png"),
+              ),
+              title: Text(""),
+              // title: Text("Me",style: TextStyle(fontSize: 11),)
+            ),
           ],
         ),
         body: PageView(
@@ -134,10 +164,32 @@ class _MyHomePageState extends State<Home> {
         ),
         backgroundColor: Colors.green[900].withOpacity(.8),
       ));
+
   void onPageChanged(int page) {
     setState(() {
       this._pageIndex = page;
     });
+  }
+
+  void choiceAction(String choice) {
+    if (choice == Constants.Settings) {}
+    if (choice == Constants.Personal_details) {
+      Screen5();
+    }
+    if (choice == Constants.Logout) {
+      FirebaseAuth.instance.signOut();
+      FirebaseUser user = FirebaseAuth.instance.currentUser;
+      print('$user');
+      // Loginpage(title: 'Farm+');
+      Navigator.pushReplacement(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => Loginpage(
+                        // phoneNumber: phoneNumber,
+                        // verificationId: value,
+                        // isSignup: isSignup
+                        )));
+    }
   }
 
   void onTabTapped(int index) {
@@ -198,7 +250,6 @@ class SearchBox extends StatelessWidget {
     );
   }
 }
-
 // class RegisterPage extends StatelessWidget {
 //   Future<bool> registerUser() async {}
 //
@@ -496,30 +547,31 @@ class SearchBox extends StatelessWidget {
 //     );
 //   }
 // }
-
 class Screen1 extends StatelessWidget {
-  List<String> images = ['assets/images/tomato.jpeg','assets/images/potato.jpg','assets/images/banana.jpeg','assets/images/tea.jpg'
+  List<String> images = [
+    'assets/images/tomato.jpeg',
+    'assets/images/potato.jpg',
+    'assets/images/banana.jpeg',
+    'assets/images/tea.jpg'
   ];
   List<String> playerNames = ["Tomato", "Potato", "Banana", "Tea"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  Colors.grey[900].withOpacity(.6),
+      backgroundColor: Colors.grey[900].withOpacity(.6),
       // appBar: AppBar(
       //   backgroundColor: Colors.teal,
       //   // title: Text("Sample listView"),
       // ),
       body: ListView.builder(
           itemCount: images.length,
-
           itemBuilder: (context, index) {
-
             return Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(5.0),
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: Colors.grey, width: 2)),
+                    border: Border.all(color: Colors.transparent, width: 2)),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -527,62 +579,87 @@ class Screen1 extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-//
                           child: ListTile(
-                            leading: Text(
-                              playerNames[index],
-                              style: TextStyle(
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                            trailing: IconButton(icon: Icon(Icons.sort),onPressed: (){
-                              showDialog(context: context,
-                                  builder: (BuildContext context){
-                                    return AlertDialog(
-                                      backgroundColor:  Colors.white38,
-                                        title: Text('Settings'),
-                                        content: Container(
-                                          // color:Colors.grey[900].withOpacity(.6),
-                                          width: 10,height: 100,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(bottom:8.0),
-                                                child: Container(
-                                                  child: Text("Update"),
-                                                  height: 20,
+                        leading: Text(
+                          playerNames[index],
+                          style: TextStyle(
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.sort,color: Colors.white60,),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                      backgroundColor:
+                                          Colors.green[200].withOpacity(.3),
+                                      // title: Text('Settings'),
+                                      content: Container(
+                                        // color:Colors.grey[900].withOpacity(.6),
+                                        width: 10, height: 100,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8.0,
+                                                  top: 10,
+                                                  left: 10),
+                                              child: Container(
+                                                child: Text(
+                                                  "Save",
+                                                  style: TextStyle(
+                                                      color: Colors.white60,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textScaleFactor: 1.0,
                                                 ),
                                               ),
-                                              Container(height: 1,color: Colors.grey,),
-                                              SizedBox(height: 5,),
-                                              Padding(
-                                                padding: const EdgeInsets.only(bottom:8.0),
-                                                child: Container(
-                                                  child: Text("Delete"),
-                                                  height: 20,
-                                                ),
-                                              ),
-                                              Container(height: 1,color: Colors.grey,),
+                                            ),
 
-                                            ],
-                                          ),
-                                        )
-                                    );
-                                  }
-                              );
-                            },),
-                          )),
+                                            // Container(height: 1,color: Colors.white60,),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8.0,
+                                                  top: 10,
+                                                  left: 10),
+                                              child: Container(
+                                                child: Text(
+                                                  "Share",
+                                                  style: TextStyle(
+                                                      color: Colors.white60,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textScaleFactor: 1.0,
+                                                ),
+                                                // height: 20,
+                                              ),
+                                            ),
+                                            // Container(height: 1,color: Colors.grey,),
+                                          ],
+                                        ),
+                                      ));
+                                });
+                          },
+                        ),
+                      )),
                       SizedBox(
                         height: 20,
                       ),
 
-                           Image.asset(images[index],
-                          width: 300,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
+                      Image.asset(
+                        images[index],
+                        width: 300,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      ),
                       //   child: Image.network(
                       //     imgUrls[index],
                       //     width: 300,
@@ -617,7 +694,6 @@ class Screen2 extends State<Map> {
   void initState() {
     // final applicationBloc = Provider.of<ApplicationBloc>( context, listen: false);
 
-
     //Listen for selected Location
     // locationSubscription = applicationBloc.selectedLocation.stream.listen((place) {
     //   if (place != null) {
@@ -634,13 +710,11 @@ class Screen2 extends State<Map> {
     super.initState();
   }
 
-
-
   @override
   void dispose() {
-    // final applicationBloc =
-    // Provider.of<ApplicationBloc>(context, listen: false);
-    // applicationBloc.dispose();
+    final applicationBloc =
+        Provider.of<ApplicationBloc>(context, listen: false);
+    applicationBloc.dispose();
     _locationController.dispose();
     locationSubscription.cancel();
     boundsSubscription.cancel();
@@ -653,113 +727,110 @@ class Screen2 extends State<Map> {
     return Scaffold(
         body: (applicationBloc.currentLocation == null)
             ? Center(
-          child: CircularProgressIndicator(),
-        )
+                child: CircularProgressIndicator(),
+              )
             : ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _locationController,
-                textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(
-                  hintText: 'Search by City',
-                  suffixIcon: Icon(Icons.search),
-                ),
-                onChanged: (value) => applicationBloc.searchPlaces(value),
-                onTap: () => applicationBloc.clearSelectedLocation(),
-              ),
-            ),
-            Stack(
-              children: [
-                Container(
-                  height: 500.0,
-                  child: GoogleMap(
-                    mapType: MapType.normal,
-                    myLocationEnabled: true,
-                    // initialCameraPosition: CameraPosition(
-                    //   target: LatLng(
-                    //       // applicationBloc.currentLocation.latitude,
-                    //       applicationBloc.currentLocation.longitude),
-                    //   zoom: 14,
-                    // ),
-                    onMapCreated: (GoogleMapController controller) {
-                      _mapController.complete(controller);
-                    },
-                    markers: Set<Marker>.of(applicationBloc.markers),
-                  ),
-                ),
-                if (applicationBloc.searchResults != null &&
-                    applicationBloc.searchResults.length != 0)
-                  Container(
-                      height: 300.0,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(.6),
-                          backgroundBlendMode: BlendMode.darken)),
-                if (applicationBloc.searchResults != null)
-                  Container(
-                    height: 300.0,
-                    child: ListView.builder(
-                        itemCount: applicationBloc.searchResults.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                              applicationBloc
-                                  .searchResults[index].description,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onTap: () {
-                              applicationBloc.setSelectedLocation(
-                                  applicationBloc
-                                      .searchResults[index].placeId);
-                            },
-                          );
-                        }),
-                  ),
-              ],
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Find Nearest',
-                  style: TextStyle(
-                      fontSize: 25.0, fontWeight: FontWeight.bold)),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Wrap(
-                spacing: 8.0,
                 children: [
-                  FilterChip(
-                    label: Text('25km'),
-                    onSelected: (val) => applicationBloc.togglePlaceType(
-                        'campground', val),
-                    selected:
-                    applicationBloc.placeType  =='campground',
-                    selectedColor: Colors.blue,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _locationController,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: InputDecoration(
+                        hintText: 'Search by City',
+                        suffixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) => applicationBloc.searchPlaces(value),
+                      onTap: () => applicationBloc.clearSelectedLocation(),
+                    ),
                   ),
-                  FilterChip(
-                      label: Text('30km'),
-                      onSelected: (val) => applicationBloc
-                          .togglePlaceType('locksmith', val),
-                      selected: applicationBloc.placeType  =='locksmith',
-                      selectedColor: Colors.blue),
-                  FilterChip(
-                      label: Text('35km'),
-                      onSelected: (val) => applicationBloc
-                          .togglePlaceType('pharmacy', val),
-                      selected:
-                      applicationBloc.placeType  =='pharmacy',
-                      selectedColor: Colors.blue),
-
+                  Stack(
+                    children: [
+                      Container(
+                        height: 500.0,
+                        child: GoogleMap(
+                          mapType: MapType.normal,
+                          myLocationEnabled: true,
+                          // initialCameraPosition: CameraPosition(
+                          //   target: LatLng(
+                          //       applicationBloc.currentLocation.latitude,
+                          //       applicationBloc.currentLocation.longitude),
+                          //   zoom: 14,
+                          // ),
+                          onMapCreated: (GoogleMapController controller) {
+                            _mapController.complete(controller);
+                          },
+                          markers: Set<Marker>.of(applicationBloc.markers),
+                        ),
+                      ),
+                      if (applicationBloc.searchResults != null &&
+                          applicationBloc.searchResults.length != 0)
+                        Container(
+                            height: 300.0,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(.6),
+                                backgroundBlendMode: BlendMode.darken)),
+                      if (applicationBloc.searchResults != null)
+                        Container(
+                          height: 300.0,
+                          child: ListView.builder(
+                              itemCount: applicationBloc.searchResults.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(
+                                    applicationBloc
+                                        .searchResults[index].description,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onTap: () {
+                                    applicationBloc.setSelectedLocation(
+                                        applicationBloc
+                                            .searchResults[index].placeId);
+                                  },
+                                );
+                              }),
+                        ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Find Nearest',
+                        style: TextStyle(
+                            fontSize: 25.0, fontWeight: FontWeight.bold)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Wrap(
+                      spacing: 8.0,
+                      children: [
+                        FilterChip(
+                          label: Text('25km'),
+                          onSelected: (val) => applicationBloc.togglePlaceType(
+                              'campground', val),
+                          selected: applicationBloc.placeType == 'campground',
+                          selectedColor: Colors.blue,
+                        ),
+                        FilterChip(
+                            label: Text('30km'),
+                            onSelected: (val) => applicationBloc
+                                .togglePlaceType('locksmith', val),
+                            selected: applicationBloc.placeType == 'locksmith',
+                            selectedColor: Colors.blue),
+                        FilterChip(
+                            label: Text('35km'),
+                            onSelected: (val) => applicationBloc
+                                .togglePlaceType('pharmacy', val),
+                            selected: applicationBloc.placeType == 'pharmacy',
+                            selectedColor: Colors.blue),
+                      ],
+                    ),
+                  )
                 ],
-              ),
-            )
-          ],
-        ));
+              ));
   }
 
   Future<void> _goToPlace(Place place) async {
@@ -786,7 +857,6 @@ class Screen2 extends State<Map> {
 //     );
 //   }
 // }
-
 class Screen3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -794,8 +864,8 @@ class Screen3 extends StatelessWidget {
       color: Colors.grey[900].withOpacity(.6),
       child: Padding(
         padding: const EdgeInsets.all(40.0),
-        child: Card(
-            color: Colors.transparent, child: Center(child: Text("Screen 3"))),
+      //   child: Card(
+      //       color: Colors.transparent, child: Center(child: Text("Screen 3"))),
       ),
     );
   }
@@ -805,10 +875,10 @@ class Screen4 extends StatelessWidget {
   List<ChatModel> list = ChatModel.list;
   @override
   Widget build(BuildContext context) {
-   return Container( color: Colors.grey[900].withOpacity(.6),
-     child: Expanded(
-         child:
-      ListView.builder(
+    return Container(
+      color: Colors.grey[900].withOpacity(.6),
+      child: Expanded(
+          child: ListView.builder(
         itemCount: list.length,
         itemBuilder: (context, index) {
           return ListTile(
@@ -821,17 +891,22 @@ class Screen4 extends StatelessWidget {
             },
             leading: Container(
               width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(100),
-                ),
-                image: DecorationImage(
-                  image: AssetImage('assets/images/account1.png'),
-                ),
+              height: 60,
+              child: Icon(
+                Icons.person,
+                size: 45,
+                color: Colors.white54,
               ),
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.all(
+              //     Radius.circular(100),
+              //   ),Icon(Icons.person,size: 140,color: Colors.white54,),
+              //   // image: DecorationImage(
+              //   //   image: AssetImage('assets/images/me.png'),
+              //   // ),
+              // ),
             ),
-            title:  Text(
+            title: Text(
               list[index].contact.name,
               style: TextStyle(
                 color: Colors.white,
@@ -839,35 +914,137 @@ class Screen4 extends StatelessWidget {
             ),
             subtitle: list[index].isTyping
                 ? Row(
-              children: <Widget>[
-                SpinKitThreeBounce(
-                  color: Colors.white38,
-                  size: 20.0,
-                ),
-              ],
-            )
+                    children: <Widget>[
+                      SpinKitThreeBounce(
+                        color: Colors.white38,
+                        size: 20.0,
+                      ),
+                    ],
+                  )
                 : Row(
-              children: <Widget>[
-                SizedBox(width: 25),
-              ],
-            ),
+                    children: <Widget>[
+                      SizedBox(width: 25),
+                    ],
+                  ),
           );
         },
       )),
-   );
+    );
   }
 }
 
-class Screen5 extends StatelessWidget {
+class Screen5 extends StatefulWidget {
+
+
+  @override
+  _Screen5State createState() => _Screen5State();
+}
+
+class _Screen5State extends State<Screen5> {
+  static String mobilenumber="";
+  _Screen5State(){checkFirstScreen();}
+  @override
+  void initState() {
+    checkFirstScreen();
+    super.initState();
+  }
+
+  Future<void> checkFirstScreen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    mobilenumber= prefs.getString('phonenumber');
+    print(mobilenumber);
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[900].withOpacity(.6),
-      child: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Card(
-            color: Colors.transparent, child: Center(child: Text("Screen 5"))),
-      ),
-    );
+        color: Colors.grey[900].withOpacity(.6),
+        alignment: Alignment.center,
+        child: Column(children: <Widget>[
+          SizedBox(
+            height: 80,
+          ),
+          Center(
+            child: Container(
+              margin: EdgeInsets.only(right: 5, left: 10, top: 5),
+              child: Icon(
+                Icons.person,
+                size: 140,
+                color: Colors.white54,
+              ),
+              width: 100,
+              height: 100,
+            ),
+          ),
+          SizedBox(
+            height: 70,
+          ),
+          Container(
+            // alignment: Alignment.center,
+            color: Colors.transparent,
+            margin: EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.person,
+                      size: 50,
+                      color: Colors.white54,
+                    ),
+                    title: Column(
+                      children: [
+                        Text(
+                          'Name',
+                          textScaleFactor: 1.0,
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                        Text(
+                          'Name',
+                          textScaleFactor: 1.0,
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                    trailing: Icon(
+                      Icons.edit,
+                      size: 30,
+                      color: Colors.white54,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.phone,
+                      size: 40,
+                      color: Colors.white54,
+                    ),
+                    title: Column(
+                      children: [
+                        Text(
+                          'Phone Number',
+                          textScaleFactor: 1.0,
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                        Text(
+                          mobilenumber,
+                          textScaleFactor: 1.0,
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                    trailing: Icon(
+                      Icons.edit,
+                      size: 30,
+                      color: Colors.white54,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ]));
   }
 }

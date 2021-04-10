@@ -14,7 +14,7 @@ Future<void> main() async {
   SharedPreferences prefs=await SharedPreferences.getInstance();
   var phonenumber=prefs.getString('phonenumber') ;
   await Firebase.initializeApp();
-  runApp(MaterialApp(home: phonenumber==null ? Loginpage(title: 'Farm+'):Home(),theme:  new ThemeData(scaffoldBackgroundColor: const Color(0xFF33691E)),
+  runApp(MaterialApp(home: phonenumber==null ? Loginpage(title: 'Farm+'):Home(phonenumber),theme:  new ThemeData(scaffoldBackgroundColor: const Color(0xFF33691E)),
     debugShowCheckedModeBanner: false,),);
 }
 

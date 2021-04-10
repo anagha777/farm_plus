@@ -36,8 +36,7 @@ class _Loginpage extends State<Loginpage> {
   final SmsAutoFill _autoFill = SmsAutoFill();
   String phoneNumber,verificationId;
 
-  TextStyle style =
-      TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
+  TextStyle style = TextStyle(fontSize: 20.0, color: Colors.white);
   // final String title;
   @override
   Widget build(BuildContext context) {
@@ -176,12 +175,12 @@ class _Loginpage extends State<Loginpage> {
                                           // verifyPhoneNumber(hint, isSignup: false);
                                         },
                                         child: Text(
-                                          'Cancel',
+                                          '',
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.black,
                                           ),),
-                                        color:Colors.white24
+                                        color:Colors.transparent
                                     ),
                                   ),
                                   Container(margin: EdgeInsets.only(right: 10),
@@ -227,18 +226,23 @@ class _Loginpage extends State<Loginpage> {
         verificationCompleted: (AuthCredential authCredential) {
           print(authCredential);
           verifyOTP(_code);
-          // FirebaseAuth.instance
-          //     .signInWithCredential(authCredential)
-          //     .then((value) async {
+          FirebaseAuth.instance
+              .signInWithCredential(authCredential)
+              .then((value) async {
           //       // Home();
           //   print("verified");
-          // });
+          });
         },
         verificationFailed: (FirebaseAuthException authException) {
           print(authException.toString());
         },
         codeSent: (value, [data]) {
-          print(value);
+          print(value);(String verificationId, [int forceResendingToken]){
+            setState(() {
+              verificationId = verificationId;
+              // status = 'Code sent';
+            });
+          };
         },
         codeAutoRetrievalTimeout: (value) async {
           print("code auto retrieval timeout  :  ");
@@ -246,7 +250,7 @@ class _Loginpage extends State<Loginpage> {
           prefs.setString('phonenumber', phoneNumber);
           // print("covcvbcbvnbvnbbnvnb timeout  :  " +
           //     prefs.getString('phoneNumber'));
-          verifyOTP(value);
+          verifyOTP(verificationId);
         //   Navigator.pushReplacement(
         //       context,
         //       CupertinoPageRoute(
@@ -268,7 +272,7 @@ class _Loginpage extends State<Loginpage> {
         .then((value) async {
       print(value);
       // if (widget.isSignup) {
-      Home();
+      Home(phoneNumber);
       // } else {
       //   Navigator.pushReplacement(
       //       context, CupertinoPageRoute(builder: (context) => Home()));

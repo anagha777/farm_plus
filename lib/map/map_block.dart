@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html';
+// import 'dart:html';
 
 import 'package:farm_plus/map/place_service.dart';
 import 'package:farm_plus/src/model/place.dart';

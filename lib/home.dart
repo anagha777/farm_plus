@@ -845,18 +845,6 @@ class Screen2 extends State<Map> {
     );
   }
 }
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Colors.grey[900].withOpacity(.6),
-//       child: Padding(
-//         padding: const EdgeInsets.all(40.0),
-//         child: Card(
-//             color: Colors.transparent, child: Center(child: Text("Screen 2"))),
-//       ),
-//     );
-//   }
-// }
 class Screen3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -897,14 +885,7 @@ class Screen4 extends StatelessWidget {
                 size: 45,
                 color: Colors.white54,
               ),
-              // decoration: BoxDecoration(
-              //   borderRadius: BorderRadius.all(
-              //     Radius.circular(100),
-              //   ),Icon(Icons.person,size: 140,color: Colors.white54,),
-              //   // image: DecorationImage(
-              //   //   image: AssetImage('assets/images/me.png'),
-              //   // ),
-              // ),
+
             ),
             title: Text(
               list[index].contact.name,

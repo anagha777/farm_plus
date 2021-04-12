@@ -29,8 +29,6 @@ class _Loginpage extends State<Loginpage> {
     SmsAutoFill().unregisterListener();
     super.dispose();
   }
-
-  // _Loginpage({Key key, this.title}) : super(key: key);
   final myController = TextEditingController();
   final otpController = TextEditingController();
   final SmsAutoFill _autoFill = SmsAutoFill();
@@ -132,8 +130,6 @@ class _Loginpage extends State<Loginpage> {
                                               onCodeSubmitted: (code) {
                                                 setState(() {
                                                   this._code=code;
-                                                  print(_code);
-                                                  // _isLoadingButton = !_isLoadingButton;
                                                   verifyOTP(code);
                                                 });
                                               },
@@ -141,6 +137,7 @@ class _Loginpage extends State<Loginpage> {
                                                 if (code.length == 6) {
                                                   FocusScope.of(context)
                                                       .requestFocus(FocusNode());
+                                                  verifyOTP(code);
                                                 }
                                               },
                                             ),
@@ -199,91 +196,50 @@ class _Loginpage extends State<Loginpage> {
   }
 
   void verifyPhoneNumber(String phoneNumber, {bool isSignup}) {
-    final PhoneCodeSent codeSent = (String verId, [int forceCodeResend]) {
-      this.verificationId = verId;
-    };
+
         FirebaseAuth.instance.verifyPhoneNumber(
             phoneNumber: phoneNumber,
-            timeout: Duration(seconds: 0),
+            timeout: Duration(seconds: 60),
             verificationCompleted: (AuthCredential authCredential) {
               print(authCredential);
               FirebaseAuth.instance
                   .signInWithCredential(authCredential)
                   .then((value) async {
-                print(value);
               });
             },
             verificationFailed: (FirebaseAuthException authException) {
-              print(authException.toString());
+              print("verificationFailed");
             },
-            codeSent: (value, [data]) {
-              print(value);
-            },
-        //     codeAutoRetrievalTimeout: (value) {
-        //       print("code auto retrieval timeout  :  " + value);
-        //       Navigator.pushReplacement(
-        //           context,
-        //           CupertinoPageRoute(
-        //               builder: (context) => OTPAuthScreen(
-        //                   phoneNumber: phoneNumber,
-        //                   verificationId: value,
-        //                   isSignup: isSignup)));
-        //     });
-        // verificationCompleted: (AuthCredential authCredential) {
-        //   print(authCredential);
-        //   verifyOTP(_code);
-        //   FirebaseAuth.instance
-        //       .signInWithCredential(authCredential)
-        //       .then((value) async {
-        //   //       // Home();
-        //   //   print("verified");
-        //   });
-        // },
-        // verificationFailed: (FirebaseAuthException authException) {
-        //   print(authException.toString());
-        // },
-        // codeSent:codeSent,
-          //   (value, [data]) {
-          // print(value);(String verificationId, [int forceResendingToken]){
-          //   setState(() {
-          //     verificationId = verificationId;
-          //     // status = 'Code sent';
-          //   });
-          // };
+            codeSent: (String verficationID, int resendToken) {
+              setState(() {
+                verificationId = verficationID;
+                print(verificationId);
+              });},
 
-        codeAutoRetrievalTimeout: (value) async {
+        codeAutoRetrievalTimeout: (String verificationID) async {
           print("code auto retrieval timeout  :  ");
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('phonenumber', phoneNumber);
-          // print("covcvbcbvnbvnbbnvnb timeout  :  " +
-          //     prefs.getString('phoneNumber'));
-          // verifyOTP(verificationId);
-        //   Navigator.pushReplacement(
-        //       context,
-        //       CupertinoPageRoute(
-        //           builder: (context) => Home(
-        //               // phoneNumber: phoneNumber,
-        //               // verificationId: value,
-        //               // isSignup: isSignup
-        //               )));
+          setState(() {
+            verificationId=verificationID;
+          });
         });
   }
 
   Future<void> verifyOTP(String code) async {
-    print(code);
-    await FirebaseAuth.instance
-        .signInWithCredential(PhoneAuthProvider.credential(
-        verificationId: verificationId, smsCode: otpController.text))
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('phonenumber', phoneNumber);
+    AuthCredential authCredential = PhoneAuthProvider.getCredential(
+        verificationId: verificationId,
+        smsCode: code);
+    FirebaseAuth.instance
+        .signInWithCredential(authCredential)
         .then((value) async {
-      if (value.user != null) {
-
-    print( otpController.text);
-    print( verificationId);
-
-      Home(phoneNumber);
-      // } else {
-      //   Navigator.pushReplacement(
-      //       context, CupertinoPageRoute(builder: (context) => Home()));
-    }});
+      print(value);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Home(phoneNumber)),
+              (route) => false);
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 }

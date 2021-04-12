@@ -250,303 +250,7 @@ class SearchBox extends StatelessWidget {
     );
   }
 }
-// class RegisterPage extends StatelessWidget {
-//   Future<bool> registerUser() async {}
-//
-//   RegisterPage({Key key, this.title}) : super(key: key);
-//   TextStyle style =
-//       TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
-//   final String title;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Colors.black.withAlpha(150),
-//       child: Scaffold(
-//           backgroundColor: Colors.green[900].withOpacity(.15),
-//           appBar: AppBar(
-//             toolbarHeight: 100,
-//             automaticallyImplyLeading: false,
-//             title: Container(
-//                 width: 80,
-//                 height: 80,
-//                 child: Image.asset('assets/images/app_icon.png')),
-//             backgroundColor: Colors.transparent,
-//             elevation: 0.0,
-//           ),
-//           body: BackdropFilter(
-//               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 100),
-//               child: Container(
-//                   child: Column(children: <Widget>[
-//                 Center(
-//                   child: RichText(
-//                     textAlign: TextAlign.center,
-//                     text: TextSpan(children: <TextSpan>[
-//                       TextSpan(
-//                           text: "Farm ",
-//                           style: TextStyle(
-//                               fontSize: 50,
-//                               color: Colors.white,
-//                               fontWeight: FontWeight.bold)),
-//                       TextSpan(
-//                           text: "+",
-//                           style: TextStyle(
-//                               fontSize: 40,
-//                               color: Colors.red[900],
-//                               fontWeight: FontWeight.bold)),
-//                     ]),
-//                   ),
-//                 ),
-//                 SizedBox(
-//                   height: 50,
-//                 ),
-//                 Container(
-//                   color: Colors.transparent,
-//                   margin: EdgeInsets.all(30.0),
-//                   child: Padding(
-//                     padding: const EdgeInsets.all(10.0),
-//                     child:
-//                         Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-//                       Container(
-//                         decoration: BoxDecoration(
-//                           borderRadius: BorderRadius.circular(10),
-//                         ),
-//                         child: Image.asset('assets/images/key1.png'),
-//                         width: 40,
-//                         height: 150,
-//                       ),
-//                       Container(
-//                         decoration: BoxDecoration(
-//                           borderRadius: BorderRadius.circular(10),
-//                         ),
-//                         child: Image.asset('assets/images/key2.png'),
-//                         width: 30,
-//                         height: 100,
-//                       ),
-//                       Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: <Widget>[
-//                           Container(
-//                             height: 50,
-//                             width: 180,
-//                             child: Card(
-//                               color: Colors.white12.withOpacity(.3),
-//                               child: TextField(
-//                                 obscureText: true,
-//                                 style: style,
-//                                 decoration: InputDecoration(
-//                                   contentPadding:
-//                                       EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 10.0),
-//                                   hintText: "username@mail.com",
-//                                   hintStyle: TextStyle(
-//                                       color: Colors.white,
-//                                       fontSize: 16,
-//                                       fontWeight: FontWeight.bold),
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//                           Container(
-//                             width: 180.0,
-//                             height: 50,
-//                             child: Card(
-//                               color: Colors.white12.withOpacity(.3),
-//                               child: TextField(
-//                                 obscureText: true,
-//                                 style: style,
-//                                 decoration: InputDecoration(
-//                                   contentPadding:
-//                                       EdgeInsets.fromLTRB(10.0, 0, 0.0, 10.0),
-//                                   hintText: "********",
-//                                   hintStyle: TextStyle(
-//                                       color: Colors.white,
-//                                       fontSize: 16,
-//                                       fontWeight: FontWeight.bold),
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ]),
-//                   ),
-//                 ),
-//                 Container(
-//                   child: Padding(
-//                     padding: const EdgeInsets.all(20.0),
-//                     child: Column(
-//                       children: <Widget>[
-//                         Center(
-//                             child: Column(
-//                           children: [
-//                             GestureDetector(
-//                               onTap: () {
-//                                 Navigator.push(
-//                                   context,
-//                                   MaterialPageRoute(
-//                                       builder: (context) => Loginpage()),
-//                                 );
-//                               },
-//                               child: Image(
-//                                 image: AssetImage('assets/images/thump.png'),
-//                                 height: 90,
-//                               ),
-//                             )
-//                           ],
-//                         )),
-//                         SizedBox(
-//                           height: 1.0,
-//                         ),
-//                         Center(
-//                           child: Text('Register',
-//                               style: TextStyle(
-//                                 fontSize: 18,
-//                                 color: Colors.white70,
-//                               )
-//                               // fontStyle: FontStyle.italic),
-//                               ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ])))),
-//     );
-//   }
-// }
 
-// class _Loginpage extends State<Loginpage> {
-//   String _code;
-//   String signature = "{{ app signature }}";
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
-//
-//   @override
-//   void dispose() {
-//     SmsAutoFill().unregisterListener();
-//     super.dispose();
-//   }
-//
-//   // _Loginpage({Key key, this.title}) : super(key: key);
-//   final myController = TextEditingController();
-//   TextStyle style =
-//       TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
-//   // final String title;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Colors.black.withAlpha(150),
-//       child: Scaffold(
-//           backgroundColor: Colors.green.withAlpha(10).withOpacity(.1),
-//           body: BackdropFilter(
-//               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 100),
-//               child: Container(
-//                   child: Column(children: <Widget>[
-//                 SizedBox(
-//                   height: 80,
-//                 ),
-//                 Center(
-//                   child: RichText(
-//                     textAlign: TextAlign.center,
-//                     text: TextSpan(children: <TextSpan>[
-//                       TextSpan(
-//                           text: "Farm ",
-//                           style: TextStyle(
-//                               fontSize: 50,
-//                               color: Colors.white,
-//                               fontWeight: FontWeight.bold)),
-//                       TextSpan(
-//                           text: "+",
-//                           style: TextStyle(
-//                               fontSize: 40,
-//                               color: Colors.red[900],
-//                               fontWeight: FontWeight.bold)),
-//                     ]),
-//                   ),
-//                 ),
-//                 SizedBox(
-//                   height: 50,
-//                 ),
-//                 Container(
-//                   // color: Colors.transparent,
-//                   margin: EdgeInsets.all(30.0),
-//                   child: Padding(
-//                     padding: const EdgeInsets.all(10.0),
-//                     child: Column(
-//                       // mainAxisSize: MainAxisSize.max,
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       crossAxisAlignment: CrossAxisAlignment.stretch,
-//                       children: <Widget>[
-//                         Padding(
-//                           padding: const EdgeInsets.all(8.0),
-//                           child: Container(
-//                               color: Colors.white12,
-//                               height: 45,
-//                               child: PhoneFieldHint(
-//                                 controller: myController,
-//                               )),
-//                         ),
-//                         Padding(
-//                           padding: const EdgeInsets.all(8),
-//                           child: Container(
-//                             color: Colors.white12,
-//                             height: 45,
-//                             child: Padding(
-//                               padding: const EdgeInsets.all(4.0),
-//                               child: PinFieldAutoFill(
-//                                 decoration: UnderlineDecoration(
-//                                   textStyle: TextStyle(
-//                                       fontSize: 20, color: Colors.black),
-//                                   colorBuilder: FixedColorBuilder(
-//                                       Colors.black.withOpacity(0.3)),
-//                                 ),
-//                                 currentCode: _code,
-//                                 onCodeSubmitted: (code) {},
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//                 Container(
-//                   child: Padding(
-//                     padding: const EdgeInsets.all(20.0),
-//                     child: Column(
-//                       children: <Widget>[
-//                         Center(
-//                             child: Column(
-//                           children: [
-//                             GestureDetector(
-//                               onTap: () {
-//                                 Navigator.push(
-//                                   context,
-//                                   MaterialPageRoute(
-//                                       builder: (context) => Home()),
-//                                 );
-//                               },
-//                               child: Text(
-//                                 ''
-//                                 'Login',
-//                                 style: TextStyle(
-//                                     fontSize: 18,
-//                                     color: Colors.white70,
-//                                     fontStyle: FontStyle.italic),
-//                               ),
-//                             ),
-//                           ],
-//                         )),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ])))),
-//     );
-//   }
-// }
 class Screen1 extends StatelessWidget {
   List<String> images = [
     'assets/images/tomato.jpeg',
@@ -845,6 +549,7 @@ class Screen2 extends State<Map> {
     );
   }
 }
+
 class Screen3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -1029,3 +734,300 @@ class _Screen5State extends State<Screen5> {
         ]));
   }
 }
+// class RegisterPage extends StatelessWidget {
+//   Future<bool> registerUser() async {}
+//
+//   RegisterPage({Key key, this.title}) : super(key: key);
+//   TextStyle style =
+//       TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
+//   final String title;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       color: Colors.black.withAlpha(150),
+//       child: Scaffold(
+//           backgroundColor: Colors.green[900].withOpacity(.15),
+//           appBar: AppBar(
+//             toolbarHeight: 100,
+//             automaticallyImplyLeading: false,
+//             title: Container(
+//                 width: 80,
+//                 height: 80,
+//                 child: Image.asset('assets/images/app_icon.png')),
+//             backgroundColor: Colors.transparent,
+//             elevation: 0.0,
+//           ),
+//           body: BackdropFilter(
+//               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 100),
+//               child: Container(
+//                   child: Column(children: <Widget>[
+//                 Center(
+//                   child: RichText(
+//                     textAlign: TextAlign.center,
+//                     text: TextSpan(children: <TextSpan>[
+//                       TextSpan(
+//                           text: "Farm ",
+//                           style: TextStyle(
+//                               fontSize: 50,
+//                               color: Colors.white,
+//                               fontWeight: FontWeight.bold)),
+//                       TextSpan(
+//                           text: "+",
+//                           style: TextStyle(
+//                               fontSize: 40,
+//                               color: Colors.red[900],
+//                               fontWeight: FontWeight.bold)),
+//                     ]),
+//                   ),
+//                 ),
+//                 SizedBox(
+//                   height: 50,
+//                 ),
+//                 Container(
+//                   color: Colors.transparent,
+//                   margin: EdgeInsets.all(30.0),
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(10.0),
+//                     child:
+//                         Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+//                       Container(
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(10),
+//                         ),
+//                         child: Image.asset('assets/images/key1.png'),
+//                         width: 40,
+//                         height: 150,
+//                       ),
+//                       Container(
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(10),
+//                         ),
+//                         child: Image.asset('assets/images/key2.png'),
+//                         width: 30,
+//                         height: 100,
+//                       ),
+//                       Column(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         children: <Widget>[
+//                           Container(
+//                             height: 50,
+//                             width: 180,
+//                             child: Card(
+//                               color: Colors.white12.withOpacity(.3),
+//                               child: TextField(
+//                                 obscureText: true,
+//                                 style: style,
+//                                 decoration: InputDecoration(
+//                                   contentPadding:
+//                                       EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 10.0),
+//                                   hintText: "username@mail.com",
+//                                   hintStyle: TextStyle(
+//                                       color: Colors.white,
+//                                       fontSize: 16,
+//                                       fontWeight: FontWeight.bold),
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                           Container(
+//                             width: 180.0,
+//                             height: 50,
+//                             child: Card(
+//                               color: Colors.white12.withOpacity(.3),
+//                               child: TextField(
+//                                 obscureText: true,
+//                                 style: style,
+//                                 decoration: InputDecoration(
+//                                   contentPadding:
+//                                       EdgeInsets.fromLTRB(10.0, 0, 0.0, 10.0),
+//                                   hintText: "********",
+//                                   hintStyle: TextStyle(
+//                                       color: Colors.white,
+//                                       fontSize: 16,
+//                                       fontWeight: FontWeight.bold),
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ]),
+//                   ),
+//                 ),
+//                 Container(
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(20.0),
+//                     child: Column(
+//                       children: <Widget>[
+//                         Center(
+//                             child: Column(
+//                           children: [
+//                             GestureDetector(
+//                               onTap: () {
+//                                 Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                       builder: (context) => Loginpage()),
+//                                 );
+//                               },
+//                               child: Image(
+//                                 image: AssetImage('assets/images/thump.png'),
+//                                 height: 90,
+//                               ),
+//                             )
+//                           ],
+//                         )),
+//                         SizedBox(
+//                           height: 1.0,
+//                         ),
+//                         Center(
+//                           child: Text('Register',
+//                               style: TextStyle(
+//                                 fontSize: 18,
+//                                 color: Colors.white70,
+//                               )
+//                               // fontStyle: FontStyle.italic),
+//                               ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ])))),
+//     );
+//   }
+// }
+
+// class _Loginpage extends State<Loginpage> {
+//   String _code;
+//   String signature = "{{ app signature }}";
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
+//
+//   @override
+//   void dispose() {
+//     SmsAutoFill().unregisterListener();
+//     super.dispose();
+//   }
+//
+//   // _Loginpage({Key key, this.title}) : super(key: key);
+//   final myController = TextEditingController();
+//   TextStyle style =
+//       TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white);
+//   // final String title;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       color: Colors.black.withAlpha(150),
+//       child: Scaffold(
+//           backgroundColor: Colors.green.withAlpha(10).withOpacity(.1),
+//           body: BackdropFilter(
+//               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 100),
+//               child: Container(
+//                   child: Column(children: <Widget>[
+//                 SizedBox(
+//                   height: 80,
+//                 ),
+//                 Center(
+//                   child: RichText(
+//                     textAlign: TextAlign.center,
+//                     text: TextSpan(children: <TextSpan>[
+//                       TextSpan(
+//                           text: "Farm ",
+//                           style: TextStyle(
+//                               fontSize: 50,
+//                               color: Colors.white,
+//                               fontWeight: FontWeight.bold)),
+//                       TextSpan(
+//                           text: "+",
+//                           style: TextStyle(
+//                               fontSize: 40,
+//                               color: Colors.red[900],
+//                               fontWeight: FontWeight.bold)),
+//                     ]),
+//                   ),
+//                 ),
+//                 SizedBox(
+//                   height: 50,
+//                 ),
+//                 Container(
+//                   // color: Colors.transparent,
+//                   margin: EdgeInsets.all(30.0),
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(10.0),
+//                     child: Column(
+//                       // mainAxisSize: MainAxisSize.max,
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       crossAxisAlignment: CrossAxisAlignment.stretch,
+//                       children: <Widget>[
+//                         Padding(
+//                           padding: const EdgeInsets.all(8.0),
+//                           child: Container(
+//                               color: Colors.white12,
+//                               height: 45,
+//                               child: PhoneFieldHint(
+//                                 controller: myController,
+//                               )),
+//                         ),
+//                         Padding(
+//                           padding: const EdgeInsets.all(8),
+//                           child: Container(
+//                             color: Colors.white12,
+//                             height: 45,
+//                             child: Padding(
+//                               padding: const EdgeInsets.all(4.0),
+//                               child: PinFieldAutoFill(
+//                                 decoration: UnderlineDecoration(
+//                                   textStyle: TextStyle(
+//                                       fontSize: 20, color: Colors.black),
+//                                   colorBuilder: FixedColorBuilder(
+//                                       Colors.black.withOpacity(0.3)),
+//                                 ),
+//                                 currentCode: _code,
+//                                 onCodeSubmitted: (code) {},
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//                 Container(
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(20.0),
+//                     child: Column(
+//                       children: <Widget>[
+//                         Center(
+//                             child: Column(
+//                           children: [
+//                             GestureDetector(
+//                               onTap: () {
+//                                 Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                       builder: (context) => Home()),
+//                                 );
+//                               },
+//                               child: Text(
+//                                 ''
+//                                 'Login',
+//                                 style: TextStyle(
+//                                     fontSize: 18,
+//                                     color: Colors.white70,
+//                                     fontStyle: FontStyle.italic),
+//                               ),
+//                             ),
+//                           ],
+//                         )),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ])))),
+//     );
+//   }
+// }

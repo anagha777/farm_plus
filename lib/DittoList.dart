@@ -80,9 +80,9 @@ class _DittoListState extends State<DittoList> {
   List<String> amount = [
     "₹19.00",
     "₹27.00",
-    "₹20.00",
-    "₹25.00",
-    "₹20.00",
+    "₹40.00",
+    "₹125.00",
+    "₹120.00",
     "₹38.00",
     "₹17.00"
   ];
@@ -96,13 +96,13 @@ class _DittoListState extends State<DittoList> {
     "Strawberry"
   ];
   List<String> fruitRate = [
-    "₹38/kg",
-    "₹27/kg",
+    "₹58/kg",
+    "₹30/kg",
     "₹40/kg",
-    "₹50/kg",
+    "₹30/kg",
     "₹40/kg",
-    "₹42/kg",
-    "₹44/kg"
+    "₹22/kg",
+    "₹54/kg"
   ];
   List<String> fruitQuantity = [
     "500g",
@@ -111,17 +111,19 @@ class _DittoListState extends State<DittoList> {
     "2.5Kg",
     "3Kg",
     "1.5Kg",
-    "3.5Kg"
+    "1Kg"
   ];
   List<String> fruitAmount = [
-    "₹19.00",
-    "₹27.00",
-    "₹20.00",
-    "₹25.00",
-    "₹20.00",
-    "₹38.00",
-    "₹17.00"
+    "₹29.00",
+    "₹30.00",
+    "₹80.00",
+    "₹75.00",
+    "₹120.00",
+    "₹33.00",
+    "₹54.00"
   ];
+
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -198,6 +200,7 @@ class _DittoListState extends State<DittoList> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20.0),
+
               child: Row(
                 children: [
                   Text(
@@ -221,7 +224,7 @@ class _DittoListState extends State<DittoList> {
                     width: 50,
                   ),
                   Text(
-                    "₹149.00",
+                    "₹331.00",
                     style: TextStyle(
                         color: Colors.blueAccent[200],
                         fontSize: 17,
@@ -323,7 +326,7 @@ class _DittoListState extends State<DittoList> {
                     width: 50,
                   ),
                   Text(
-                    "₹155.00",
+                    "₹421.00",
                     style: TextStyle(
                         color: Colors.blueAccent[200],
                         fontSize: 17,

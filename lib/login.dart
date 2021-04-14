@@ -37,6 +37,9 @@ class _Loginpage extends State<Loginpage> {
       phoneController.text = _autoNumber;
       if (phoneController.text.isNotEmpty)
         verifyPhoneNumber(phoneController.text.trim(), isSignup: false);
+
+         await SmsAutoFill().listenForCode;
+           
     }
   }
 
@@ -126,9 +129,10 @@ class _Loginpage extends State<Loginpage> {
 
                                               obscureText: false,
                                               controller: phoneController,
-                                              onSubmitted: (number) {
+                                              onSubmitted: (number)async {
                                                 if(phoneController.text.isNotEmpty)
                                                   verifyPhoneNumber(phoneController.text.trim(), isSignup: false);
+                                             await SmsAutoFill().listenForCode;
                                               },
                                               keyboardType: TextInputType.phone,
                                               decoration: InputDecoration(

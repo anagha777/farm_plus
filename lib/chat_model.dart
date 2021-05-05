@@ -16,7 +16,10 @@ class ChatModel {
     ),
     ChatModel(
       isTyping: false,
-
+      contact: ContactModel(name: "Farmer2"),
+    ),
+    ChatModel(
+      isTyping: false,
       contact: ContactModel(name: "Farmer2"),
     ),
 

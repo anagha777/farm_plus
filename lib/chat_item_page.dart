@@ -13,17 +13,17 @@ class ChatItemPage extends StatefulWidget {
 }
 
 class _ChatItemPageState extends State<ChatItemPage> {
-  int pos;
-  _ChatItemPageState(this.pos);
-  ChatModel currentChat = ChatModel.list.elementAt(0);
+  static int pos;
+  _ChatItemPageState(pos);
   String currentUser = "1";
   String pairId = "2";
-  List<ChatItemModel> chatItems = ChatItemModel.list;
+  ChatModel currentChat = ChatModel.list.elementAt(0);
+  List<ChatItemModel> chatItems ;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.withAlpha(10).withOpacity(.5),
+      backgroundColor: Colors.grey[900].withOpacity(.6),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

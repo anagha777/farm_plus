@@ -43,18 +43,21 @@ class _MyHomePageState extends State<Home> {
     mobilenumber = phonenumber;
     print(mobilenumber);
   }
-  List<Widget> tabPages = [
-    Screen1(),
-    Map(),
-    DittoList(),
-    Screen4(),
-    Screen5()
-  ];
+  List<Widget> tabPages = [Screen1(), Map(), DittoList(), Screen4(), Screen5()];
   final GlobalKey scaffoldKey = GlobalKey();
   final SnackBar snackBar = const SnackBar(content: Text('Showing Snackbar'));
+  bool _isVisible = true;
+  ScrollController scrollcontroller;
   @override
   void initState() {
     super.initState();
+    scrollcontroller = ScrollController();
+    scrollcontroller.addListener(() {
+      setState(() {
+        _isVisible = scrollcontroller.position.userScrollDirection ==
+            ScrollDirection.forward;
+      });
+    });
     _pageController = PageController(initialPage: _pageIndex);
   }
 
@@ -171,24 +174,26 @@ class _MyHomePageState extends State<Home> {
     });
   }
 
-  void choiceAction(String choice) {
+  Future<void> choiceAction(String choice) async {
     if (choice == Constants.Settings) {}
     if (choice == Constants.Personal_details) {
       Screen5();
     }
     if (choice == Constants.Logout) {
       FirebaseAuth.instance.signOut();
-      FirebaseUser user = FirebaseAuth.instance.currentUser;
+      User user = FirebaseAuth.instance.currentUser;
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      await preferences.clear();
       print('$user');
       // Loginpage(title: 'Farm+');
       Navigator.pushReplacement(
-                context,
-                CupertinoPageRoute(
-                    builder: (context) => Loginpage(
-                        // phoneNumber: phoneNumber,
-                        // verificationId: value,
-                        // isSignup: isSignup
-                        )));
+          context,
+          CupertinoPageRoute(
+              builder: (context) => Loginpage(
+                  // phoneNumber: phoneNumber,
+                  // verificationId: value,
+                  // isSignup: isSignup
+                  )));
     }
   }
 
@@ -251,23 +256,40 @@ class SearchBox extends StatelessWidget {
   }
 }
 
-class Screen1 extends StatelessWidget {
+class Screen1 extends StatefulWidget {
+  @override
+  _Screen1State createState() => _Screen1State();
+}
+
+class _Screen1State extends State<Screen1> {
   List<String> images = [
     'assets/images/tomato.jpeg',
     'assets/images/potato.jpg',
     'assets/images/banana.jpeg',
     'assets/images/tea.jpg'
   ];
+
   List<String> playerNames = ["Tomato", "Potato", "Banana", "Tea"];
+  bool _isVisible = true;
+  ScrollController scrollcontroller;
+  @override
+  void initState() {
+    super.initState();
+    scrollcontroller = ScrollController();
+    scrollcontroller.addListener(() {
+      setState(() {
+        _isVisible = scrollcontroller.position.userScrollDirection ==
+            ScrollDirection.forward;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900].withOpacity(.6),
-      // appBar: AppBar(
-      //   backgroundColor: Colors.teal,
-      //   // title: Text("Sample listView"),
-      // ),
       body: ListView.builder(
+          controller: scrollcontroller,
           itemCount: images.length,
           itemBuilder: (context, index) {
             return Padding(
@@ -292,7 +314,10 @@ class Screen1 extends StatelessWidget {
                               fontSize: 20),
                         ),
                         trailing: IconButton(
-                          icon: Icon(Icons.sort,color: Colors.white60,),
+                          icon: Icon(
+                            Icons.sort,
+                            color: Colors.white60,
+                          ),
                           onPressed: () {
                             showDialog(
                                 context: context,
@@ -550,20 +575,6 @@ class Screen2 extends State<Map> {
   }
 }
 
-class Screen3 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[900].withOpacity(.6),
-      child: Padding(
-        padding: const EdgeInsets.all(40.0),
-      //   child: Card(
-      //       color: Colors.transparent, child: Center(child: Text("Screen 3"))),
-      ),
-    );
-  }
-}
-
 class Screen4 extends StatelessWidget {
   List<ChatModel> list = ChatModel.list;
   @override
@@ -590,7 +601,6 @@ class Screen4 extends StatelessWidget {
                 size: 45,
                 color: Colors.white54,
               ),
-
             ),
             title: Text(
               list[index].contact.name,
@@ -620,15 +630,15 @@ class Screen4 extends StatelessWidget {
 }
 
 class Screen5 extends StatefulWidget {
-
-
   @override
   _Screen5State createState() => _Screen5State();
 }
 
 class _Screen5State extends State<Screen5> {
-  static String mobilenumber="";
-  _Screen5State(){checkFirstScreen();}
+  static String mobilenumber = "";
+  _Screen5State() {
+    checkFirstScreen();
+  }
   @override
   void initState() {
     checkFirstScreen();
@@ -637,9 +647,10 @@ class _Screen5State extends State<Screen5> {
 
   Future<void> checkFirstScreen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    mobilenumber= prefs.getString('phonenumber');
+    mobilenumber = prefs.getString('phonenumber');
     print(mobilenumber);
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
